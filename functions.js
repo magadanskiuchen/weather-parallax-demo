@@ -74,9 +74,11 @@ window.addEventListener('scroll', e => {
 function init() {
 	absoluteKeyframes = relativeToAbsolute(keyframes);
 	
-	document.body.style.height = Math.max( ...Object.values(absoluteKeyframes)
-		.map( selector => Math.max( ...Object.values(selector)
-			.map( prop => Math.max(...Object.keys(prop)) )
+	document.body.style.height = Math.max(
+		...Object.values(absoluteKeyframes).map( selector => Math.max(
+			...Object.values(selector).map( prop => Math.max(
+				...Object.keys(prop)
+			))
 		))
 	) + window.innerHeight + 'px';
 	
