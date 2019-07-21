@@ -2,10 +2,10 @@ const keyframes = [
 	{
 		selector: '.fa-sun',
 		start: 0,
-		end: '150%',
+		end: '200%',
 		property: 'rotate',
 		from: 0,
-		to: 360
+		to: 180
 	}
 ];
 
@@ -27,8 +27,8 @@ window.addEventListener('scroll', e => {
 		for (frame of absoluteKeyframes) {
 			const element = document.querySelector(frame.selector);
 			
-			if (frame.start < window.scrollY && frame.end > window.scrollY) {
-				const scrollProgress = (window.scrollY - frame.start) / (frame.end - window.scrollY);
+			if (window.scrollY >= frame.start && window.scrollY <= frame.end) {
+				const scrollProgress = window.scrollY / (frame.end - window.innerHeight);
 				
 				switch (frame.property) {
 					case 'rotate':
