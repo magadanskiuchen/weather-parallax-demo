@@ -45,7 +45,10 @@ window.addEventListener('scroll', e => {
 			animations[frame.selector] = animations[frame.selector] || {};
 			
 			if (window.scrollY >= frame.start && window.scrollY <= frame.end) {
-				const value = -frame.to/2 * (Math.cos(Math.PI*window.scrollY/frame.end) - 1) + frame.from;
+				// const value = -(frame.to - frame.from)/2 * (Math.cos(Math.PI*window.scrollY/frame.end) - 1) + frame.from;
+				
+				const scrollProgress = (window.scrollY - frame.start) / (frame.end - frame.start);
+				const value = (frame.to - frame.from) * scrollProgress + frame.from;
 				
 				switch (frame.property) {
 					case 'rotate':
