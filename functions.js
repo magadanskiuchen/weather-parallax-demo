@@ -1,61 +1,14 @@
-const keyframes = [
-	{
-		selector: '.fa-sun',
-		start: 0,
-		end: '100%',
-		property: 'rotate',
-		from: 0,
-		to: 180
+const keyframes = {
+	'.fa-sun': {
+		'rotate': { 0: 0, '100%': 180 },
+		'opacity': { 0: 0, '20%': 1, '80%': 1, '100%': 0 }
 	},
-	{
-		selector: '.fa-sun',
-		start: 0,
-		end: '20%',
-		property: 'opacity',
-		from: 0,
-		to: 1
-	},
-	{
-		selector: '.fa-sun',
-		start: '80%',
-		end: '100%',
-		property: 'opacity',
-		from: 1,
-		to: 0
-	},
-	{
-		selector: '.fa-cloud',
-		start: 0,
-		end: '50%',
-		property: 'translateX',
-		from: -150,
-		to: -150
-	},
-	{
-		selector: '.fa-cloud',
-		start: '50%',
-		end: '85%',
-		property: 'translateX',
-		from: -150,
-		to: 0
-	},
-	{
-		selector: '.fa-cloud',
-		start: 0,
-		end: '50%',
-		property: 'opacity',
-		from: 0,
-		to: 0
-	},
-	{
-		selector: '.fa-cloud',
-		start: '50%',
-		end: '75%',
-		property: 'opacity',
-		from: 0,
-		to: 1
+	
+	'.fa-cloud': {
+		'translateX': { 0: -150, '50%': -150, '85%': 0 },
+		'opacity': { 0: 0, '50%': 0, '75%': 1 }
 	}
-];
+};
 
 let absoluteKeyframes = {};
 
@@ -73,27 +26,36 @@ window.addEventListener('scroll', e => {
 	requestAnimationFrame(() => {
 		const animations = {};
 		
-		for (frame of absoluteKeyframes) {
-			animations[frame.selector] = animations[frame.selector] || {};
+		for (const selector in absoluteKeyframes) {
+			animations[selector] = animations[selector] || {};
 			
-			if (window.scrollY >= frame.start && window.scrollY <= frame.end) {
-				// const value = -(frame.to - frame.from)/2 * (Math.cos(Math.PI*window.scrollY/frame.end) - 1) + frame.from;
+			for (const prop in absoluteKeyframes[selector]) {
+				const fromScroll = getBiggestOfSmallerThan(Object.keys(absoluteKeyframes[selector][prop]), window.scrollY);
+				const toScroll = getSmallestOfBiggerThan(Object.keys(absoluteKeyframes[selector][prop]), window.scrollY);
 				
-				const scrollProgress = (window.scrollY - frame.start) / (frame.end - frame.start);
-				const value = (frame.to - frame.from) * scrollProgress + frame.from;
+				const fromValue = absoluteKeyframes[selector][prop][fromScroll];
+				const toValue = absoluteKeyframes[selector][prop][toScroll];
 				
-				switch (frame.property) {
+				let value = fromValue;
+				
+				if (fromValue !== toValue) {
+					const scrollProgress = (window.scrollY - fromScroll) / (toScroll - fromScroll);
+					
+					value = (toValue - fromValue) * scrollProgress + fromValue;
+				}
+				
+				switch (prop) {
 					case 'translateX':
 					case 'translateY':
-						animations[frame.selector].transform = animations[frame.selector].transform || [];
-						animations[frame.selector].transform.push(`${frame.property}(${value}%)`);
+						animations[selector].transform = animations[selector].transform || [];
+						animations[selector].transform.push(`${prop}(${value}%)`);
 						break;
 					case 'rotate':
-						animations[frame.selector].transform = animations[frame.selector].transform || [];
-						animations[frame.selector].transform.push(`rotate(${value}deg)`);
+						animations[selector].transform = animations[selector].transform || [];
+						animations[selector].transform.push(`rotate(${value}deg)`);
 						break;
 					case 'opacity':
-						animations[frame.selector].opacity = (value).toFixed(2);
+						animations[selector].opacity = (value).toFixed(2);
 						break;
 				}
 			}
@@ -111,26 +73,43 @@ window.addEventListener('scroll', e => {
 
 function init() {
 	absoluteKeyframes = relativeToAbsolute(keyframes);
-	document.body.style.height = Math.max.apply(Math, absoluteKeyframes.map(object => object.end + window.innerHeight)) + 'px';
+	
+	document.body.style.height = Math.max( ...Object.values(absoluteKeyframes)
+		.map( selector => Math.max( ...Object.values(selector)
+			.map( prop => Math.max(...Object.keys(prop)) )
+		))
+	) + window.innerHeight + 'px';
+	
 	window.dispatchEvent(new Event('scroll'));
 }
 
 function relativeToAbsolute(frames) {
-	const absolute = [];
+	const absolute = {};
 	
-	for (const i in frames) {
-		let obj = {};
+	for (const selector in frames) {
+		absolute[selector] = absolute[selector] || {};
 		
-		for (const j in frames[i]) {
-			if (frames[i][j].toString().match(/%$/)) {
-				obj[j] = parseInt(frames[i][j]) * window.innerHeight * 0.01;
-			} else {
-				obj[j] = frames[i][j];
+		for (const prop in frames[selector]) {
+			absolute[selector][prop] = absolute[selector][prop] || {};
+			
+			for (const key in frames[selector][prop]) {
+				if (key.toString().match(/%$/)) {
+					const scroll = parseInt(key) * window.innerHeight * 0.01;
+					absolute[selector][prop][scroll.toFixed(0)] = frames[selector][prop][key];
+				} else {
+					absolute[selector][prop][key] = frames[selector][prop][key];
+				}
 			}
 		}
-		
-		absolute.push(obj);
 	}
 	
 	return absolute;
+}
+
+function getBiggestOfSmallerThan(arr, max) {
+	return arr.reduce( (prev, curr) => curr <= max && Math.abs(curr - max) < Math.abs(prev - max) ? curr : prev);
+}
+
+function getSmallestOfBiggerThan(arr, min) {
+	return arr.reduce( (prev, curr) => curr > min && Math.abs(curr - min) < Math.abs(prev - min) ? curr : prev );
 }
