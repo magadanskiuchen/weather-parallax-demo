@@ -1,5 +1,15 @@
 @charset "utf-8";
 
+@keyframes snowing {
+	from { transform: translateY(50%); }
+	to { transform: translateY(800%); }
+}
+
+@keyframes jiggle {
+	from { transform: translateX(-150%); }
+	to { transform: translateX(50%); }
+}
+
 * { margin: 0; padding: 0; }
 html, body { width: 100%; height: 100%; }
 
@@ -10,3 +20,18 @@ body { background: #333; color: #FFF; font: normal 32px/1.35 Arial, Helvetica, s
 
 .fa-sun { color: yellow; }
 .fa-cloud { color: lightblue; transform: translateX(-150%); }
+.fa-cloud-showers-heavy { color: midnightblue; font-size: 694%; transform: translateX(10px) translateY(42px); }
+.fa-snowflake { animation: snowing 5s linear infinite; font-size: 200%; }
+.fa-snowflake:before { animation: jiggle 2s ease-in-out -2s infinite alternate; }
+
+.fa-snowflake:nth-child(4) { font-size: 220%; animation-delay: -500ms; animation-duration: 6s }
+.fa-snowflake:nth-child(5) { font-size: 180%; animation-delay: -750ms; animation-duration: 4s; }
+.fa-snowflake:nth-child(6) { animation-delay: -1000ms; }
+.fa-snowflake:nth-child(7) { font-size: 150%; animation-delay: -1500ms; animation-duration: 5.5s;}
+.fa-snowflake:nth-child(8) { animation-delay: -3500ms; }
+
+.fa-snowflake:nth-child(4):before { animation-delay: -200ms; animation-duration: 2.5s }
+.fa-snowflake:nth-child(5):before { animation-delay: -400ms; animation-duration: 2.2s; }
+.fa-snowflake:nth-child(6):before { animation-delay: -500ms; }
+.fa-snowflake:nth-child(7):before { animation-delay: -1000ms; animation-duration: 1.5s;}
+.fa-snowflake:nth-child(8):before { animation-delay: -1750ms; }

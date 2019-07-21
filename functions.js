@@ -6,8 +6,16 @@ const keyframes = {
 	
 	'.fa-cloud': {
 		'translateX': { 0: -150, '50%': -150, '85%': 0 },
-		'opacity': { 0: 0, '50%': 0, '75%': 1 }
-	}
+		'opacity': { 0: 0, '50%': 0, '75%': 1, '150%': 1, '175%': 0 }
+	},
+	
+	'.fa-cloud-showers-heavy': {
+		'opacity': { 0: 0, '150%': 0, '175%': 1 }
+	},
+	
+	'.fa-snowflake': {
+		'opacity': { 0: 0, '175%': 0, '200%': 1 }
+	},
 };
 
 let absoluteKeyframes = {};
@@ -62,10 +70,12 @@ window.addEventListener('scroll', e => {
 		}
 		
 		for (const selector in animations) {
-			const element = document.querySelector(selector);
+			const element = document.querySelectorAll(selector);
 			
 			for (const property in animations[selector]) {
-				element.style[property] = (typeof(animations[selector][property]) == 'object') ? animations[selector][property].join(' ') : animations[selector][property];
+				element.forEach(function (singleElement) {
+					singleElement.style[property] = (typeof(animations[selector][property]) == 'object') ? animations[selector][property].join(' ') : animations[selector][property];
+				});
 			}
 		}
 	});
