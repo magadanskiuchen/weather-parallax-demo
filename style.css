@@ -7,3 +7,6 @@ body { background: #333; color: #FFF; font: normal 32px/1.35 Arial, Helvetica, s
 
 .icon { position: fixed; top: 50%; left: 50%; opacity: 0; font-size: 160px; transform-origin: left top; }
 .icon:before { display: inline-block; transform: translate(-50%, -50%); }
+
+.fa-sun { color: yellow; }
+.fa-cloud { color: lightblue; transform: translateX(-150%); }

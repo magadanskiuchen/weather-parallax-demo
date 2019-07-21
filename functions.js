@@ -22,6 +22,38 @@ const keyframes = [
 		property: 'opacity',
 		from: 1,
 		to: 0
+	},
+	{
+		selector: '.fa-cloud',
+		start: 0,
+		end: '50%',
+		property: 'translateX',
+		from: -150,
+		to: -150
+	},
+	{
+		selector: '.fa-cloud',
+		start: '50%',
+		end: '85%',
+		property: 'translateX',
+		from: -150,
+		to: 0
+	},
+	{
+		selector: '.fa-cloud',
+		start: 0,
+		end: '50%',
+		property: 'opacity',
+		from: 0,
+		to: 0
+	},
+	{
+		selector: '.fa-cloud',
+		start: '50%',
+		end: '75%',
+		property: 'opacity',
+		from: 0,
+		to: 1
 	}
 ];
 
@@ -51,6 +83,11 @@ window.addEventListener('scroll', e => {
 				const value = (frame.to - frame.from) * scrollProgress + frame.from;
 				
 				switch (frame.property) {
+					case 'translateX':
+					case 'translateY':
+						animations[frame.selector].transform = animations[frame.selector].transform || [];
+						animations[frame.selector].transform.push(`${frame.property}(${value}%)`);
+						break;
 					case 'rotate':
 						animations[frame.selector].transform = animations[frame.selector].transform || [];
 						animations[frame.selector].transform.push(`rotate(${value}deg)`);
@@ -75,6 +112,7 @@ window.addEventListener('scroll', e => {
 function init() {
 	absoluteKeyframes = relativeToAbsolute(keyframes);
 	document.body.style.height = Math.max.apply(Math, absoluteKeyframes.map(object => object.end + window.innerHeight)) + 'px';
+	window.dispatchEvent(new Event('scroll'));
 }
 
 function relativeToAbsolute(frames) {
