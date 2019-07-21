@@ -109,25 +109,9 @@ function relativeToAbsolute(frames) {
 }
 
 function getBiggestOfSmallerThan(arr, max) {
-	let result = arr[0];
-	
-	for (const item of arr) {
-		if (item > result && item <= max) {
-			result = item;
-		}
-	}
-	
-	return result;
+	return Math.max(...arr.filter(item => item <= max));
 }
 
 function getSmallestOfBiggerThan(arr, min) {
-	let result = arr[arr.length - 1];
-	
-	for (const item of arr) {
-		if (item < result && item > min) {
-			result = item;
-		}
-	}
-	
-	return result;
+	return Math.min(...arr.filter(item => item > min));
 }
