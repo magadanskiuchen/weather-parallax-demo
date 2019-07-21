@@ -109,9 +109,25 @@ function relativeToAbsolute(frames) {
 }
 
 function getBiggestOfSmallerThan(arr, max) {
-	return arr.reduce( (prev, curr) => curr <= max && Math.abs(curr - max) < Math.abs(prev - max) ? curr : prev);
+	let result = arr[0];
+	
+	for (const item of arr) {
+		if (item > result && item <= max) {
+			result = item;
+		}
+	}
+	
+	return result;
 }
 
 function getSmallestOfBiggerThan(arr, min) {
-	return arr.reduce( (prev, curr) => curr > min && Math.abs(curr - min) < Math.abs(prev - min) ? curr : prev );
+	let result = arr[arr.length - 1];
+	
+	for (const item of arr) {
+		if (item < result && item > min) {
+			result = item;
+		}
+	}
+	
+	return result;
 }
